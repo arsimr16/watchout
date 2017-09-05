@@ -54,7 +54,7 @@ var asteroids = board.selectAll('.asteroids')
   	height: pixelize(settings.r*2)
   });
 
-// add drag mouse functionality
+// add move mouse functionality
 board.on('mousemove', function(){
 	var loc = d3.mouse(board);
 	mouse = { x: loc[0], y: loc[1]};
@@ -64,11 +64,56 @@ board.on('mousemove', function(){
 	});
 });
 
-var detectCollisions() {
+// make asteroids move
+var move = function() {
+	asteroids.transition().duration(settings.duration).style({
+		top: randY,
+		left: randX
+	}).each('end', function() {
+		move(d3.select(this));
+	});
+}
+move(asteroids);
 
+// update score during game play
+var scoreTicker = function() {
+	score++;
+	highScore = Math.max(score, highScore);
+	updateScore();
+};
+setInterval(scoreTicker, 100);
+
+var prevCollision = false;
+// detects collisions between the mouse and the asteroids
+var detectCollisions = function() {
+	var collision = false;
+
+	asteroids.each(function() {
+		var cx = this.offsetLeft + settings.r;
+		var cy = this.offsetTop + settings.r;
+		/* a collision occurs when the distance between 
+		the center of the mouse and the center of an asteroid 
+		is less than twice the radius of the mouse/asteroid */
+		var x = cx - mouse.x;
+		var y = cy - mouse.y;
+		if (Math.sqrt(x*x + y*y) < settings.r*2) {
+			collision = true;
+		}
+	});
+
+	if (collision) {
+		score = 0;
+		board.style('background-color', 'red');
+		if (prevCollision !== collision) {
+			collitionCount++;
+		}
+	} else {
+		board.style('background-color', 'white');
+	}
+	prevCollision = collision;
 };
 
-
+d3.timer(detectCollisions);
 
 
 
