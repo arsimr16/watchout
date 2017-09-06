@@ -10,36 +10,38 @@ var settings = {
 // set mouse to middle of board
 var mouse = {x: settings.w/2, y: settings.h/2};
 // starting values
-var score = 0, highscore = 0, collisionCount = 0;
+var score = 0;
+var highScore = 0;
+var collisionCount = 0;
 
 // adds 'px' to numbers (helpful for css styling)
 var pixelize = function(number) {return number + 'px';};
 
 // get random X and Y coordinates
-var rand = function() {return Math.floor(Math.random()*n);};
+var rand = function() {return Math.floor(Math.random()*settings.n);};
 var randX = function() {return pixelize(rand(settings.w-settings.r*2));};
 var randY = function() {return pixelize(rand(settings.h-settings.r*2));};
 
 // update the score during game play
 var updateScore = function() {
 	d3.select('.scoreboard .current span').text(score);
-	d3.select('.scoreboard .highscore span').text(highscore);
+	d3.select('.scoreboard .highScore span').text(highScore);
 	d3.select('.scoreboard .collisions span').text(collisionCount);
 }
 
 // set board style
 var board = d3.select('.board').style({
-	width: pixelize(settings.w);
-	height: pixelize(settings.h);
+	width: pixelize(settings.w),
+	height: pixelize(settings.h)
 });
 
 // set mouse style
 d3.select('.mouse').style({
-	top: pixelize(mouse.y);
-	left: pixelize(mouse.x);
-	width: pixelize(settings.r*2);
-	height: pixelize(settings.r*2);
-	'border-radius': pixelize(settings.r*2);
+	top: pixelize(mouse.y),
+	left: pixelize(mouse.x),
+	width: pixelize(settings.r*2),
+	height: pixelize(settings.r*2),
+	'border-radius': pixelize(settings.r*2)
 });
 
 // select all asteroids; assign arbitrary data and random positions to each
